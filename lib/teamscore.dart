@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TeamScoreWidget extends StatefulWidget {
-  final String initialTeamName;
+  const TeamScoreWidget({super.key});
 
-  TeamScoreWidget({required this.initialTeamName});
+  
 
   @override
   _TeamScoreWidgetState createState() => _TeamScoreWidgetState();
@@ -38,46 +38,45 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 1.0),
+        
         Row(
           children: [
             Column(
               children: [
                 Text(
-                  widget.initialTeamName,
+                  '$_score',
                   style: TextStyle(
-                      fontSize: 50.0,
+                      fontSize: 100.0,
                       fontFamily: 'DigitalFont',
                       color: Colors.red),
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      onPressed: _decrementScore,
-                      icon: Icon(Icons.remove),
-                      color: Colors.red,
-                      iconSize: 50,
-                    ),
-                    IconButton(
-                      onPressed: _incrementScore,
-                      icon: Icon(
-                        Icons.add,
-                        size: 50,
+                    Container(
+                      color: Colors.yellow,
+                      child: IconButton(
+                        onPressed: _decrementScore,
+                        icon: Icon(Icons.remove),
+                        color: Colors.black87,
+                        iconSize: 40,
                       ),
-                      color: Colors.green,
+                    ),
+                    Container(
+                      color: Colors.purple,
+                      child: IconButton(
+                        onPressed: _incrementScore,
+                        icon: Icon(
+                          Icons.add,
+                          size: 40,
+                        ),
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
             SizedBox(width: 40.0),
-            Text(
-              '$_score',
-              style: TextStyle(
-                  fontSize: 130.0,
-                  fontFamily: 'DigitalFont',
-                  color: Colors.white),
-            ),
           ],
         ),
       ],

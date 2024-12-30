@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:scorecontroller/teamscore.dart';
 import 'package:scorecontroller/timer.dart';
 
@@ -12,6 +13,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Color _leftIconColor = Colors.red;
   Color _rightIconColor = Colors.white;
+  final _homeTeamNameController = TextEditingController();
+  final _awayTeamNameController = TextEditingController();
+  String _homeTeamName = 'Home';
+  String _awayTeamName = 'Away';
 
   void _toggleLeftIcon() {
     setState(() {
@@ -27,67 +32,125 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _showRegisterDialog(TextEditingController controller, String teamType) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Register $teamType Team Name'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(hintText: 'Enter team name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Register'),
+              onPressed: () {
+                setState(() {
+                  if (teamType == 'Home') {
+                    _homeTeamName = controller.text;
+                  } else {
+                    _awayTeamName = controller.text;
+                  }
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: Column(
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Stack(
               children: [
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "Arrow",
-                      style: TextStyle(fontSize: 20, color: Colors.red),
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _showRegisterDialog(
+                                _homeTeamNameController, 'Home');
+                          },
+                          child: Text(
+                            _homeTeamName,
+                            style: TextStyle(
+                                fontSize: 50.0,
+                                fontFamily: 'DigitalFont',
+                                color: Colors.white),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_left,
+                            color: _leftIconColor,
+                            size: 50,
+                          ),
+                          onPressed: _toggleLeftIcon,
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_left,
-                        color: _leftIconColor,
-                        size: 50,
-                      ),
-                      onPressed: () {
-                        _toggleLeftIcon();
-                      },
-                    )
-                  ],
-                ),
-                TimerScreen(),
-                Column(
-                  children: [
-                    Text(
-                      "Arrow",
-                      style: TextStyle(fontSize: 20, color: Colors.red),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_right,
-                        color: _rightIconColor,
-                        size: 50,
-                      ),
-                      onPressed: () {
-                        _toggleRightIcon();
-                      },
+                    TimerScreen(),
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _showRegisterDialog(
+                                _awayTeamNameController, 'Away');
+                          },
+                          child: Text(
+                            _awayTeamName,
+                            style: TextStyle(
+                                fontSize: 50.0,
+                                fontFamily: 'DigitalFont',
+                                color: Colors.white),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_right,
+                            color: _rightIconColor,
+                            size: 50,
+                          ),
+                          onPressed: _toggleRightIcon,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-            Container(
-                height: 200,
-                width: double.maxFinite,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TeamScoreWidget(initialTeamName: "Home"),
-                    TeamScoreWidget(initialTeamName: "Away"),
-                  ],
-                ))
+            SizedBox(
+              height: 200,
+              width: double.maxFinite,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TeamScoreWidget(),
+                  TeamScoreWidget(),
+                ],
+              ),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -46,7 +46,7 @@ class _TimerScreenState extends State<TimerScreen> {
       child: Text(
         _formatTime(_remainingTime),
         style: TextStyle(
-            fontSize: 100,
+            fontSize: 80,
             fontWeight: FontWeight.bold,
             fontFamily: 'DigitalFont',
             color: Colors.white),
