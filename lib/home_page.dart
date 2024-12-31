@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scorecontroller/setting/timer_setting.dart';
 
 import 'package:scorecontroller/teamscore.dart';
 import 'package:scorecontroller/timer.dart';
@@ -17,6 +18,12 @@ class _HomePageState extends State<HomePage> {
   final _awayTeamNameController = TextEditingController();
   String _homeTeamName = 'Home';
   String _awayTeamName = 'Away';
+
+  // final GlobalKey<_TimerScreenState> _timerKey = GlobalKey<_TimerScreenState>();
+  // final GlobalKey<_TeamScoreWidgetState> _homeScoreKey =
+  //     GlobalKey<_TeamScoreWidgetState>();
+  // final GlobalKey<_TeamScoreWidgetState> _awayScoreKey =
+  //     GlobalKey<_TeamScoreWidgetState>();
 
   void _toggleLeftIcon() {
     setState(() {
@@ -68,9 +75,39 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _reset() {
+    setState(() {
+      _homeTeamName = 'Home';
+      _awayTeamName = 'Away';
+      _leftIconColor = Colors.red;
+      _rightIconColor = Colors.white;
+      _homeTeamNameController.clear();
+      _awayTeamNameController.clear();
+    });
+    // _timerKey.currentState?.resetTimer();
+    // _homeScoreKey.currentState?.resetScore();
+    // _awayScoreKey.currentState?.resetScore();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   actions: [
+      //     Builder(
+      //       builder: (context) => IconButton(
+      //         icon: Icon(
+      //           Icons.settings,
+      //           color: Colors.white,
+      //         ),
+      //         onPressed: () {
+      //           Scaffold.of(context).openDrawer();
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
@@ -86,6 +123,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         TextButton(
                           onPressed: () {
+                            _homeTeamNameController.text = _homeTeamName;
                             _showRegisterDialog(
                                 _homeTeamNameController, 'Home');
                           },
@@ -112,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         TextButton(
                           onPressed: () {
+                            _awayTeamNameController.text = _awayTeamName;
                             _showRegisterDialog(
                                 _awayTeamNameController, 'Away');
                           },
@@ -151,6 +190,56 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Text("Hello Arrav dai"),
+            ListTile(
+              trailing: Icon(Icons.settings),
+              title: Text('Change time '),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TimerSetting()),
+                );
+              },
+            ),
+            ListTile(
+              trailing: Icon(Icons.settings),
+              title: Text('Ip Configure '),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              trailing: Icon(Icons.restore),
+              title: Text('Reset Timer '),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => SettingPage()),
+      //     );
+      //   },
+      //   backgroundColor: Colors.transparent,
+      //   child: IconButton(
+      //       onPressed: () {
+      //         Scaffold.of(context).openDrawer();
+      //       },
+      //       icon: const Icon(
+      //         Icons.reset_tv,
+      //         color: Colors.white,
+      //       )),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
     );
   }
 }

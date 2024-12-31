@@ -1,15 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class TimerScreen extends StatefulWidget {
+  const TimerScreen({Key? key}) : super(key: key);
+
   @override
-  _TimerScreenState createState() => _TimerScreenState();
+  TimerScreenState createState() => TimerScreenState();
 }
 
-class _TimerScreenState extends State<TimerScreen> {
+class TimerScreenState extends State<TimerScreen> {
   Timer? _timer;
   int _remainingTime = 10 * 60; // 10 minutes in seconds
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  // Function to play the tick sound
+  Future<void> _playTickSound() async {
+    await _audioPlayer.play(AssetSource('assets/music/tick.mp3')); 
+  }
 
   void _startTimer() {
     if (_timer != null) {
@@ -20,11 +29,19 @@ class _TimerScreenState extends State<TimerScreen> {
       setState(() {
         if (_remainingTime > 0) {
           _remainingTime--;
+          _playTickSound(); // Play the tick sound every second
         } else {
           _timer!.cancel();
         }
       });
     });
+  }
+
+  void resetTimer() {
+    setState(() {
+      _remainingTime = 10 * 60; // Reset to 10 minutes
+    });
+    _timer?.cancel();
   }
 
   String _formatTime(int seconds) {
@@ -36,6 +53,7 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 

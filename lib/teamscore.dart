@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 class TeamScoreWidget extends StatefulWidget {
   const TeamScoreWidget({super.key});
 
-  
-
   @override
   _TeamScoreWidgetState createState() => _TeamScoreWidgetState();
 }
@@ -12,7 +10,6 @@ class TeamScoreWidget extends StatefulWidget {
 class _TeamScoreWidgetState extends State<TeamScoreWidget> {
   int _score = 0;
 
-  @override
   void _incrementScore() {
     setState(() {
       _score++;
@@ -31,14 +28,12 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
     setState(() {
       _score = 0;
     });
-    // Call the callback to notify parent
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        
         Row(
           children: [
             Column(
