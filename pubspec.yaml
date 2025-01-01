@@ -37,6 +37,7 @@ dependencies:
   riverpod: ^2.6.1
   http: ^1.2.2
   audioplayers: ^6.1.0
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:

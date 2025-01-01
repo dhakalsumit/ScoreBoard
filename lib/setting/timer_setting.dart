@@ -1,10 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:scorecontroller/timer.dart';
 
 class TimerSetting extends StatefulWidget {
-  TimerSetting({super.key});
+  const TimerSetting({super.key});
 
   @override
   _TimerSettingState createState() => _TimerSettingState();

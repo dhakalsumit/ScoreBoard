@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scorecontroller/setting/timer_setting.dart';
 
 import 'package:scorecontroller/teamscore.dart';
@@ -24,6 +25,24 @@ class _HomePageState extends State<HomePage> {
   //     GlobalKey<_TeamScoreWidgetState>();
   // final GlobalKey<_TeamScoreWidgetState> _awayScoreKey =
   //     GlobalKey<_TeamScoreWidgetState>();
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
   void _toggleLeftIcon() {
     setState(() {
