@@ -1,132 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scorecontroller/services/providers.dart';
 import 'package:scorecontroller/setting/timer_setting.dart';
+import 'teamscore.dart';
+import 'timer.dart';
 
-import 'package:scorecontroller/teamscore.dart';
-import 'package:scorecontroller/timer.dart';
-
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final homeTeamName = ref.watch(homeTeamNameProvider);
+    final awayTeamName = ref.watch(awayTeamNameProvider);
+    final leftIconColor = ref.watch(leftIconColorProvider);
+    final rightIconColor = ref.watch(rightIconColorProvider);
 
-class _HomePageState extends State<HomePage> {
-  Color _leftIconColor = Colors.red;
-  Color _rightIconColor = Colors.white;
-  final _homeTeamNameController = TextEditingController();
-  final _awayTeamNameController = TextEditingController();
-  String _homeTeamName = 'Home';
-  String _awayTeamName = 'Away';
-
-  // final GlobalKey<_TimerScreenState> _timerKey = GlobalKey<_TimerScreenState>();
-  // final GlobalKey<_TeamScoreWidgetState> _homeScoreKey =
-  //     GlobalKey<_TeamScoreWidgetState>();
-  // final GlobalKey<_TeamScoreWidgetState> _awayScoreKey =
-  //     GlobalKey<_TeamScoreWidgetState>();
-  @override
-  void initState() {
-    super.initState();
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-  }
-
-  @override
-  void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    super.dispose();
-  }
-
-  void _toggleLeftIcon() {
-    setState(() {
-      _leftIconColor = Colors.red;
-      _rightIconColor = Colors.white;
-    });
-  }
-
-  void _toggleRightIcon() {
-    setState(() {
-      _leftIconColor = Colors.white;
-      _rightIconColor = Colors.red;
-    });
-  }
-
-  void _showRegisterDialog(TextEditingController controller, String teamType) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Register $teamType Team Name'),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(hintText: 'Enter team name'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Register'),
-              onPressed: () {
-                setState(() {
-                  if (teamType == 'Home') {
-                    _homeTeamName = controller.text;
-                  } else {
-                    _awayTeamName = controller.text;
-                  }
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _reset() {
-    setState(() {
-      _homeTeamName = 'Home';
-      _awayTeamName = 'Away';
-      _leftIconColor = Colors.red;
-      _rightIconColor = Colors.white;
-      _homeTeamNameController.clear();
-      _awayTeamNameController.clear();
-    });
-    // _timerKey.currentState?.resetTimer();
-    // _homeScoreKey.currentState?.resetScore();
-    // _awayScoreKey.currentState?.resetScore();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   actions: [
-      //     Builder(
-      //       builder: (context) => IconButton(
-      //         icon: Icon(
-      //           Icons.settings,
-      //           color: Colors.white,
-      //         ),
-      //         onPressed: () {
-      //           Scaffold.of(context).openDrawer();
-      //         },
-      //       ),
-      //     ),
-      //   ],
-      // ),
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
@@ -141,13 +31,10 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       children: [
                         TextButton(
-                          onPressed: () {
-                            _homeTeamNameController.text = _homeTeamName;
-                            _showRegisterDialog(
-                                _homeTeamNameController, 'Home');
-                          },
+                          onPressed: () => _showRegisterDialog(
+                              context, ref, homeTeamNameProvider, 'Home'),
                           child: Text(
-                            _homeTeamName,
+                            homeTeamName,
                             style: TextStyle(
                                 fontSize: 50.0,
                                 fontFamily: 'DigitalFont',
@@ -157,10 +44,15 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                           icon: Icon(
                             Icons.arrow_left,
-                            color: _leftIconColor,
+                            color: leftIconColor,
                             size: 50,
                           ),
-                          onPressed: _toggleLeftIcon,
+                          onPressed: () {
+                            ref.read(leftIconColorProvider.notifier).state =
+                                Colors.red;
+                            ref.read(rightIconColorProvider.notifier).state =
+                                Colors.white;
+                          },
                         ),
                       ],
                     ),
@@ -168,13 +60,10 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       children: [
                         TextButton(
-                          onPressed: () {
-                            _awayTeamNameController.text = _awayTeamName;
-                            _showRegisterDialog(
-                                _awayTeamNameController, 'Away');
-                          },
+                          onPressed: () => _showRegisterDialog(
+                              context, ref, awayTeamNameProvider, 'Away'),
                           child: Text(
-                            _awayTeamName,
+                            awayTeamName,
                             style: TextStyle(
                                 fontSize: 50.0,
                                 fontFamily: 'DigitalFont',
@@ -184,10 +73,15 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                           icon: Icon(
                             Icons.arrow_right,
-                            color: _rightIconColor,
+                            color: rightIconColor,
                             size: 50,
                           ),
-                          onPressed: _toggleRightIcon,
+                          onPressed: () {
+                            ref.read(leftIconColorProvider.notifier).state =
+                                Colors.white;
+                            ref.read(rightIconColorProvider.notifier).state =
+                                Colors.red;
+                          },
                         ),
                       ],
                     ),
@@ -213,7 +107,18 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            Text("Hello Arrav dai"),
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
             ListTile(
               trailing: Icon(Icons.settings),
               title: Text('Change time '),
@@ -235,30 +140,54 @@ class _HomePageState extends State<HomePage> {
               trailing: Icon(Icons.restore),
               title: Text('Reset Timer '),
               onTap: () {
+                _reset(ref);
                 Navigator.pop(context);
               },
             ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => SettingPage()),
-      //     );
-      //   },
-      //   backgroundColor: Colors.transparent,
-      //   child: IconButton(
-      //       onPressed: () {
-      //         Scaffold.of(context).openDrawer();
-      //       },
-      //       icon: const Icon(
-      //         Icons.reset_tv,
-      //         color: Colors.white,
-      //       )),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
     );
+  }
+
+  void _showRegisterDialog(BuildContext context, WidgetRef ref,
+      StateProvider<String> teamNameProvider, String teamType) {
+    final TextEditingController controller = TextEditingController();
+    controller.text = ref.read(teamNameProvider);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Register $teamType Team Name'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(hintText: 'Enter team name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Register'),
+              onPressed: () {
+                ref.read(teamNameProvider.notifier).state = controller.text;
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _reset(WidgetRef ref) {
+    ref.read(homeTeamNameProvider.notifier).state = 'Home';
+    ref.read(awayTeamNameProvider.notifier).state = 'Away';
+    ref.read(leftIconColorProvider.notifier).state = Colors.red;
+    ref.read(rightIconColorProvider.notifier).state = Colors.white;
   }
 }

@@ -1,87 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:scorecontroller/timer.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TimerSetting extends StatefulWidget {
+class TimerSetting extends ConsumerStatefulWidget {
   const TimerSetting({super.key});
 
   @override
-  _TimerSettingState createState() => _TimerSettingState();
+  ConsumerState<TimerSetting> createState() => _TimerSettingState();
 }
 
-class _TimerSettingState extends State<TimerSetting> {
-  late TimerScreenState timerScreenState;
-  int _remainingTime = 10 * 60;
-
-  void incrementTime() {
-    setState(() {
-      _remainingTime += 60;
-    });
-  }
-
-  void decrementTime() {
-    setState(() {
-      if (_remainingTime > 60) {
-        _remainingTime -= 60;
-      }
-    });
-  }
+class _TimerSettingState extends ConsumerState<TimerSetting> {
+  int _currentMinutes = 10;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Timer Settings', style: TextStyle(color: Colors.black)),
+        title: Text('Timer Setting'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Set Timer',
-            style: TextStyle(fontSize: 24, color: Colors.white),
-          ),
-          Text(
-            '${_remainingTime ~/ 60} min',
-            style: TextStyle(
-                fontSize: 80,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'DigitalFont',
-                color: Colors.white),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                color: Colors.purple,
-                child: IconButton(
-                  onPressed: () {
-                    decrementTime();
-                  },
-                  icon: Icon(
-                    Icons.remove,
-                    size: 40,
-                  ),
-                  color: Colors.white,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                "$_currentMinutes:00",
+                style: TextStyle(
+                    fontSize: 80,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'DigitalFont',
+                    color: Colors.black),
               ),
-              SizedBox(width: 40.0),
-              Container(
-                color: Colors.red,
-                child: IconButton(
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.remove),
                   onPressed: () {
-                    incrementTime();
+                    setState(() {
+                      if (_currentMinutes > 0) {
+                        _currentMinutes--;
+                      }
+                    });
                   },
-                  icon: Icon(
-                    Icons.add,
-                    size: 40,
-                  ),
-                  color: Colors.white,
                 ),
-              ),
-            ],
-          ),
-        ],
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    setState(() {
+                      _currentMinutes++;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

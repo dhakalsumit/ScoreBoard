@@ -1,48 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scorecontroller/services/providers.dart';
 
-class TimerScreen extends StatefulWidget {
+
+class TimerScreen extends ConsumerWidget {
   const TimerScreen({Key? key}) : super(key: key);
-
-  @override
-  TimerScreenState createState() => TimerScreenState();
-}
-
-class TimerScreenState extends State<TimerScreen> {
-  Timer? _timer;
-  int _remainingTime = 10 * 60; // 10 minutes in seconds
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  // Function to play the tick sound
-  Future<void> _playTickSound() async {
-    await _audioPlayer.play(AssetSource('assets/music/tick.mp3')); 
-  }
-
-  void _startTimer() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingTime > 0) {
-          _remainingTime--;
-          _playTickSound(); // Play the tick sound every second
-        } else {
-          _timer!.cancel();
-        }
-      });
-    });
-  }
-
-  void resetTimer() {
-    setState(() {
-      _remainingTime = 10 * 60; // Reset to 10 minutes
-    });
-    _timer?.cancel();
-  }
 
   String _formatTime(int seconds) {
     int minutes = seconds ~/ 60;
@@ -51,18 +13,14 @@ class TimerScreenState extends State<TimerScreen> {
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    _audioPlayer.dispose();
-    super.dispose();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final remainingTime = ref.watch(timerProvider);
+    final timerNotifier = ref.read(timerProvider.notifier);
 
-  @override
-  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _startTimer,
+      onTap: timerNotifier.startTimer,
       child: Text(
-        _formatTime(_remainingTime),
+        _formatTime(remainingTime),
         style: TextStyle(
             fontSize: 80,
             fontWeight: FontWeight.bold,
