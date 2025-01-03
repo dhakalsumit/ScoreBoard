@@ -60,6 +60,22 @@ class ApiService {
       print('Error updating team name: $e');
     }
   }
+Future<void>light(String path) async{
+  final url = Uri.parse(baseUrl+ path);
+    try {
+      final response = await http.get(
+        url,
+      
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update team name: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating team name: $e');
+    }
+}
+
   Future<void> toggleButton(String side) async {
     final url = Uri.parse('$baseUrl/button/toggle');
     try {
