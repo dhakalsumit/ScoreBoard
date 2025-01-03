@@ -1,16 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scorecontroller/services/providers.dart';
+import 'package:scorecontroller/setting/ip_config.dart';
 import 'package:scorecontroller/setting/timer_setting.dart';
 import 'teamscore.dart';
 import 'timer.dart';
 
-class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+@override
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Lock orientation to landscape for HomePage
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // Reset orientation back to portrait for other screens
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final homeTeamName = ref.watch(homeTeamNameProvider);
     final awayTeamName = ref.watch(awayTeamNameProvider);
     final leftIconColor = ref.watch(leftIconColorProvider);
@@ -133,7 +161,10 @@ class HomePage extends ConsumerWidget {
               trailing: Icon(Icons.settings),
               title: Text('Ip Configure '),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IPConfigScreen()),
+                );
               },
             ),
             ListTile(
