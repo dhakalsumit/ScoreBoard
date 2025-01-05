@@ -14,6 +14,7 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
     setState(() {
       _score++;
     });
+    
   }
 
   void _decrementScore() {

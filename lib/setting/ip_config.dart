@@ -58,9 +58,9 @@ class _IPConfigScreenState extends ConsumerState<IPConfigScreen> {
             TextField(
               controller: _ipController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: '192.168.4.1',
+                hintText: currentIP.isNotEmpty ? ' $currentIP' : '192.168.4.1',
               ),
             ),
             const SizedBox(height: 20),
