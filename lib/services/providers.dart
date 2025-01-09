@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-// Team Name Providers
 final homeTeamNameProvider = StateProvider<String>((ref) => 'Home');
 final awayTeamNameProvider = StateProvider<String>((ref) => 'Away');
 
-// Icon Color Providers
 final leftIconColorProvider = StateProvider<Color>((ref) => Colors.red);
 final rightIconColorProvider = StateProvider<Color>((ref) => Colors.white);
 
-// Timer Provider
 final timerProvider = StateNotifierProvider<TimerNotifier, int>((ref) {
   return TimerNotifier();
 });
@@ -42,7 +39,7 @@ class TimerNotifier extends StateNotifier<int> {
   }
 
   void resetTimer() {
-    state = 10 * 60; // Reset to 10 minutes
+    state = 10 * 60;
     _timer?.cancel();
   }
 
@@ -53,5 +50,3 @@ class TimerNotifier extends StateNotifier<int> {
     super.dispose();
   }
 }
-
-

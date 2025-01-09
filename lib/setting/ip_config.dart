@@ -55,12 +55,19 @@ class _IPConfigScreenState extends ConsumerState<IPConfigScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            TextField(
-              controller: _ipController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: currentIP.isNotEmpty ? ' $currentIP' : '192.168.4.1',
+            GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: TextField(
+                focusNode: FocusNode(),
+                controller: _ipController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText:
+                      currentIP.isNotEmpty ? ' $currentIP' : '192.168.4.1',
+                ),
               ),
             ),
             const SizedBox(height: 20),

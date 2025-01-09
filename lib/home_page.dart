@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scorecontroller/services/api_services.dart';
 import 'package:scorecontroller/services/providers.dart';
 import 'package:scorecontroller/setting/ip_config.dart';
 import 'package:scorecontroller/setting/timer_setting.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Lock orientation to landscape for HomePage
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -70,18 +71,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(
-                            Icons.arrow_left,
-                            color: leftIconColor,
-                            size: 50,
-                          ),
-                          onPressed: () {
-                            ref.read(leftIconColorProvider.notifier).state =
-                                Colors.red;
-                            ref.read(rightIconColorProvider.notifier).state =
-                                Colors.white;
-                          },
-                        ),
+                            icon: Icon(
+                              Icons.arrow_left,
+                              color: leftIconColor,
+                              size: 50,
+                            ),
+                            onPressed: () {
+                              _toggleSide(context, 'left');
+                            }),
                       ],
                     ),
                     TimerScreen(),
@@ -105,10 +102,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             size: 50,
                           ),
                           onPressed: () {
-                            ref.read(leftIconColorProvider.notifier).state =
-                                Colors.white;
-                            ref.read(rightIconColorProvider.notifier).state =
-                                Colors.red;
+                            _toggleSide(context, 'right');
                           },
                         ),
                       ],
@@ -133,7 +127,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       drawer: Drawer(
         child: ListView(
-          padding: EdgeInsets.zero,
+          padding: EdgeInsets.only(bottom: 0, top: 0),
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
@@ -142,6 +136,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Text(
                 'Menu',
                 style: TextStyle(
+                  fontWeight: FontWeight.w500,
                   color: Colors.white,
                   fontSize: 24,
                 ),
@@ -165,14 +160,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   context,
                   MaterialPageRoute(builder: (context) => IPConfigScreen()),
                 );
-              },
-            ),
-            ListTile(
-              trailing: Icon(Icons.restore),
-              title: Text('Reset Timer '),
-              onTap: () {
-                _reset(ref);
-                Navigator.pop(context);
               },
             ),
           ],
@@ -215,10 +202,24 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  void _reset(WidgetRef ref) {
-    ref.read(homeTeamNameProvider.notifier).state = 'Home';
-    ref.read(awayTeamNameProvider.notifier).state = 'Away';
-    ref.read(leftIconColorProvider.notifier).state = Colors.red;
-    ref.read(rightIconColorProvider.notifier).state = Colors.white;
+  void _toggleSide(BuildContext context, String side) {
+    final leftIconColor = ref.read(leftIconColorProvider);
+    final rightIconColor = ref.read(rightIconColorProvider);
+
+    if (side == 'left') {
+      ref.read(leftIconColorProvider.notifier).state =
+          Colors.red;
+      ref.read(rightIconColorProvider.notifier).state =
+          Colors.white;
+          ApiService().toggleButton('left');
+    } else {
+      ref.read(leftIconColorProvider.notifier).state =
+          Colors.white;
+      ref.read(rightIconColorProvider.notifier).state =
+          Colors.red;
+          ApiService().toggleButton('right');
+    }
+
   }
-}
+  }
+

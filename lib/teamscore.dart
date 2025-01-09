@@ -14,6 +14,7 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
     setState(() {
       _score++;
     });
+
     
   }
 
@@ -60,7 +61,7 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
                     Container(
                       color: Colors.purple,
                       child: IconButton(
-                        onPressed: _incrementScore,
+                        onPressed: _incrementScore ,
                         icon: Icon(
                           Icons.add,
                           size: 40,
