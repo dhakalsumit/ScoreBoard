@@ -117,8 +117,12 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TeamScoreWidget(),
-                  TeamScoreWidget(),
+                  TeamScoreWidget(
+                    TeamName.team1,
+                  ),
+                  TeamScoreWidget(
+                    TeamName.team2,
+                  ),
                 ],
               ),
             ),
@@ -165,6 +169,15 @@ class _HomePageState extends ConsumerState<HomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ref.read(timerProvider.notifier).resetTimer();
+          ref.read(team1Provider.notifier).state = 0;
+          ref.read(team2Provider.notifier).state = 0;
+        },
+        child: Icon(Icons.restore),
+        backgroundColor: Colors.blue.shade900,
+      ),
     );
   }
 
@@ -207,19 +220,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     final rightIconColor = ref.read(rightIconColorProvider);
 
     if (side == 'left') {
-      ref.read(leftIconColorProvider.notifier).state =
-          Colors.red;
-      ref.read(rightIconColorProvider.notifier).state =
-          Colors.white;
-          ApiService().toggleButton('left');
+      ref.read(leftIconColorProvider.notifier).state = Colors.red;
+      ref.read(rightIconColorProvider.notifier).state = Colors.white;
+      ApiService().toggleButton('left');
     } else {
-      ref.read(leftIconColorProvider.notifier).state =
-          Colors.white;
-      ref.read(rightIconColorProvider.notifier).state =
-          Colors.red;
-          ApiService().toggleButton('right');
+      ref.read(leftIconColorProvider.notifier).state = Colors.white;
+      ref.read(rightIconColorProvider.notifier).state = Colors.red;
+      ApiService().toggleButton('right');
     }
-
   }
-  }
-
+}

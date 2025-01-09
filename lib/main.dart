@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:scorecontroller/home_page.dart';
 import 'package:scorecontroller/main_page.dart';
-import 'package:scorecontroller/setting/ip_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  await Hive.openBox<String>('timerSet');
   runApp(ProviderScope(child: const MyApp()));
 }
 

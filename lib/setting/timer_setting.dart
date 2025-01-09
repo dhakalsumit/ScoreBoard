@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import '../services/providers.dart';
 
 class TimerSetting extends ConsumerStatefulWidget {
   const TimerSetting({super.key});
@@ -10,7 +13,30 @@ class TimerSetting extends ConsumerStatefulWidget {
 }
 
 class _TimerSettingState extends ConsumerState<TimerSetting> {
-  int _currentMinutes = 10;
+  late Box<String> _timerSet;
+  int savedTime = 5;
+
+  void _initializeHive() async {
+    _timerSet = Hive.box<String>('timerSet');
+    savedTime =
+        int.tryParse(_timerSet.get('time', defaultValue: '10') ?? '10') ?? 10;
+    ref.read(timerProvider.notifier).setTimer(savedTime);
+    setState(() {}); // Update the UI after initializing Hive
+  }
+
+  void _updateTimerValue(int value) {
+    setState(() {
+      savedTime = value;
+    });
+    _timerSet.put('time', value.toString());
+    ref.read(timerProvider.notifier).setTimer(value);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeHive();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +51,7 @@ class _TimerSettingState extends ConsumerState<TimerSetting> {
           children: [
             Center(
               child: Text(
-                "$_currentMinutes:00",
+                "$savedTime:00",
                 style: TextStyle(
                     fontSize: 80,
                     fontWeight: FontWeight.bold,
@@ -39,19 +65,15 @@ class _TimerSettingState extends ConsumerState<TimerSetting> {
                 IconButton(
                   icon: Icon(Icons.remove),
                   onPressed: () {
-                    setState(() {
-                      if (_currentMinutes > 0) {
-                        _currentMinutes--;
-                      }
-                    });
+                    if (savedTime > 0) {
+                      _updateTimerValue(savedTime - 1);
+                    }
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    setState(() {
-                      _currentMinutes++;
-                    });
+                    _updateTimerValue(savedTime + 1);
                   },
                 ),
               ],

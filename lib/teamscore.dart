@@ -1,39 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scorecontroller/services/providers.dart';
 
-class TeamScoreWidget extends StatefulWidget {
-  const TeamScoreWidget({super.key});
-
-  @override
-  _TeamScoreWidgetState createState() => _TeamScoreWidgetState();
+enum TeamName {
+  team1,
+  team2,
 }
 
-class _TeamScoreWidgetState extends State<TeamScoreWidget> {
-  int _score = 0;
-
-  void _incrementScore() {
-    setState(() {
-      _score++;
-    });
-
-    
-  }
-
-  void _decrementScore() {
-    setState(() {
-      if (_score > 0) {
-        _score--;
-      }
-    });
-  }
-
-  void resetScore() {
-    setState(() {
-      _score = 0;
-    });
-  }
+class TeamScoreWidget extends ConsumerWidget {
+  final TeamName teamName;
+  const TeamScoreWidget(this.teamName, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final team1 = ref.watch(team1Provider);
+    final team2 = ref.watch(team2Provider);
     return Column(
       children: [
         Row(
@@ -41,7 +22,7 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
             Column(
               children: [
                 Text(
-                  '$_score',
+                  teamName == TeamName.team1 ? "$team1" : '$team2',
                   style: TextStyle(
                       fontSize: 100.0,
                       fontFamily: 'DigitalFont',
@@ -52,7 +33,15 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
                     Container(
                       color: Colors.yellow,
                       child: IconButton(
-                        onPressed: _decrementScore,
+                        onPressed: () {
+                          if (teamName == TeamName.team1) {
+                            if (team1 == 0) return;
+                            ref.read(team1Provider.notifier).state--;
+                          } else {
+                            if (team2 == 0) return;
+                            ref.read(team2Provider.notifier).state--;
+                          }
+                        },
                         icon: Icon(Icons.remove),
                         color: Colors.black87,
                         iconSize: 40,
@@ -61,7 +50,13 @@ class _TeamScoreWidgetState extends State<TeamScoreWidget> {
                     Container(
                       color: Colors.purple,
                       child: IconButton(
-                        onPressed: _incrementScore ,
+                        onPressed: () {
+                          if (teamName == TeamName.team1) {
+                            ref.read(team1Provider.notifier).state++;
+                          } else {
+                            ref.read(team2Provider.notifier).state++;
+                          }
+                        },
                         icon: Icon(
                           Icons.add,
                           size: 40,
