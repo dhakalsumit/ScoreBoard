@@ -92,13 +92,7 @@ class _MainPageState extends State<MainPage> {
                 );
               },
             ),
-            ListTile(
-              trailing: Icon(Icons.restore),
-              title: Text('Reset Timer '),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+           
           ],
         ),
       ),
@@ -107,15 +101,18 @@ class _MainPageState extends State<MainPage> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
+              SizedBox(
+                height: 30,
+              ),
               Container(
                   height: 200,
                   width: double.maxFinite,
                   child: Image.network(
-                      "https://t3.ftcdn.net/jpg/02/12/94/08/360_F_212940896_KqWDiNF4YRZARWSfgZlRJi9BpB3E5WwF.jpg")),
+                      "https://media.licdn.com/dms/image/v2/D560BAQFNsJkaJArc2w/company-logo_200_200/company-logo_200_200/0/1714379428654/pi_innovations_pvt_ltd_logo?e=1744848000&v=beta&t=19z-3LelamOm2X4CH_VxAG1aIANR90Ugd5aPM-uqm4s")),
               SizedBox(
                 height: 200,
               ),
-              Container(
+              SizedBox(
                 width: 200,
                 child: ElevatedButton(
                   onPressed: () {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:scorecontroller/home_page.dart';
 
 final ipProvider = StateProvider<String>((ref) => '');
 
@@ -74,7 +75,13 @@ class _IPConfigScreenState extends ConsumerState<IPConfigScreen> {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: _saveIP,
+                  onPressed: () {
+                    _saveIP;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  },
                   child: const Text('Save IP'),
                 ),
                 const SizedBox(width: 20),

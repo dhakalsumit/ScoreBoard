@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:scorecontroller/home_page.dart';
 
 import '../services/providers.dart';
 
@@ -77,6 +78,15 @@ class _TimerSettingState extends ConsumerState<TimerSetting> {
                   },
                 ),
               ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+              child: Text('submitted'),
             ),
           ],
         ),
